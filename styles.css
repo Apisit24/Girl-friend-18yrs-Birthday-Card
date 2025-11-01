@@ -1,0 +1,564 @@
+:root {
+    --bright-bg-start: #87CEEB;
+    --bright-bg-end: #ADD8E6;
+    --night-bg-start: #0b192f;
+    --night-bg-end: #1f3a68;
+    --accent-pink: #FF69B4;
+    --accent-yellow: #FFD700;
+    --accent-white: #FFFFFF;
+    --deep-purple: #6a0dad;
+    --mid-purple: #9d4edd;
+    --light-purple-ribbon: #e0c3fc;
+}
+
+/* Background Sky */
+@keyframes skyMove {
+    0% {
+        background-position: 0 0;
+    }
+
+    100% {
+        background-position: 0 100%;
+    }
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(180deg, var(--bright-bg-start), var(--bright-bg-end));
+    background-size: 100% 200%;
+    animation: skyMove 10s ease-in-out infinite alternate;
+    color: #333;
+    font-family: 'Kanit', 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 2.5s ease-in-out;
+}
+
+/* Night Mode */
+body.celebrate {
+    background: linear-gradient(180deg, var(--night-bg-start), var(--night-bg-end));
+}
+
+#sky {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* 🔇 Mute Button */
+.mute-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.5);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    backdrop-filter: blur(5px);
+}
+
+body.celebrate .mute-button {
+    opacity: 1;
+}
+
+/* 💬 Main Message */
+#mainMessage {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    /* JS will fade this in */
+    z-index: 5;
+    pointer-events: none;
+    text-align: center;
+    padding: 20px;
+    transition: opacity 1s ease;
+}
+
+body.celebrate #mainMessage {
+    opacity: 1;
+}
+
+#birthdayText {
+    font-size: clamp(2.5rem, 10vw, 4.5rem);
+    font-weight: 700;
+    color: var(--accent-pink);
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2), 0 0 20px var(--accent-white);
+    margin: 0;
+    opacity: 0;
+    /* JS will fade this in */
+}
+
+#subText {
+    font-size: clamp(1.2rem, 5vw, 2rem);
+    color: #555;
+    opacity: 0;
+    /* JS will fade this in */
+    margin: 10px 0 0 0;
+    transition: color 2s ease-in-out;
+}
+
+body.celebrate #subText {
+    color: #f0f0f0;
+    /* Lighter text for night mode */
+}
+
+/* 🎁 Gift Box */
+#giftBox {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120px;
+    height: 120px;
+    cursor: pointer;
+    transition: transform 0.4s ease, opacity 0.5s ease;
+    z-index: 10;
+}
+
+#giftBox .box {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--deep-purple), var(--mid-purple));
+    border-radius: 14px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    animation: giftGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes giftGlow {
+    0% {
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 0 10px rgba(224, 195, 252, 0.4);
+    }
+
+    100% {
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 0 25px rgba(224, 195, 252, 0.8);
+    }
+}
+
+#giftBox .lid {
+    position: absolute;
+    top: -20px;
+    left: -6px;
+    right: -6px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--mid-purple), var(--light-purple-ribbon));
+    border-radius: 10px;
+    transform-origin: center bottom;
+}
+
+#giftBox .ribbon-vert,
+#giftBox .ribbon-hor {
+    position: absolute;
+    background: var(--light-purple-ribbon);
+}
+
+#giftBox .ribbon-vert {
+    left: 50%;
+    transform: translateX(-50%);
+    top: -20px;
+    bottom: 0;
+    width: 18px;
+}
+
+#giftBox .ribbon-hor {
+    top: 48%;
+    left: 0;
+    right: 0;
+    height: 18px;
+}
+
+#giftBox .hint {
+    position: absolute;
+    bottom: -35px;
+    width: 100%;
+    text-align: center;
+    text-wrap: nowrap;
+    font-size: 16px;
+    font-weight: 700;
+    color: #555;
+    animation: blink 1.4s infinite alternate, hintGlow 2s ease-in-out infinite alternate;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+}
+
+@keyframes blink {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0.4;
+    }
+}
+
+@keyframes hintGlow {
+    0% {
+        transform: scale(1);
+        color: #555;
+    }
+
+    100% {
+        transform: scale(1.05);
+        color: var(--accent-pink);
+    }
+}
+
+/* 🎈 Balloons */
+.balloon {
+    position: absolute;
+    bottom: -160px;
+    width: 130px;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.2));
+    animation: floatUp 10s linear forwards, balloonWobble 2s ease-in-out infinite alternate;
+    z-index: 2;
+}
+
+.balloon .balloon-inner {
+    width: 100%;
+    height: calc(100% - 20px);
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    border: 3px solid rgba(255, 255, 255, 0.8);
+}
+
+.balloon .balloon-bottom {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    bottom: -10px;
+    clip-path: polygon(50% 100%, 0% 0%, 100% 0%);
+}
+
+.balloon::after {
+    content: "";
+    position: absolute;
+    bottom: -60px;
+    left: 50%;
+    width: 2px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.6);
+    transform: translateX(-50%);
+}
+
+@keyframes floatUp {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-120vh);
+    }
+}
+
+@keyframes balloonWobble {
+    from {
+        transform: translateY(0) rotate(-2deg);
+    }
+
+    to {
+        transform: translateY(-5px) rotate(2deg);
+    }
+}
+
+/* 🎆 Fireworks */
+.fireworks-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+body.celebrate .fireworks-container {
+    opacity: 1;
+}
+
+.firework-shell {
+    position: absolute;
+    top: 100vh;
+    width: 5px;
+    height: 10px;
+    border-radius: 50%;
+    animation: shootUp 1.5s ease-out forwards;
+}
+
+@keyframes shootUp {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(calc(var(--target-y) - 100vh));
+        opacity: 0;
+    }
+}
+
+.firework-explosion {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+}
+
+.firework-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    animation: particleExplode 1.5s ease-out forwards;
+}
+
+@keyframes particleExplode {
+    0% {
+        transform: translate(-50%, -50%) rotate(var(--angle)) translateX(0) scale(1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(var(--angle)) translateX(var(--velocity)) scale(0);
+        opacity: 0;
+    }
+}
+
+/* ✈️ Plane */
+#plane {
+    position: fixed;
+    top: 15vh;
+    left: -30vw;
+    display: flex;
+    align-items: center;
+    transition: opacity 0.5s ease;
+    z-index: 4;
+    /* Behind main text (5) */
+    opacity: 0;
+}
+
+body.celebrate #plane {
+    opacity: 1;
+}
+
+#planeImage {
+    width: 100px;
+    transform: scaleX(1);
+    filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.2));
+}
+
+#plane .banner {
+    background: var(--accent-white);
+    color: var(--accent-pink);
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin-left: -10px;
+    font-weight: bold;
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+    display: inline-block;
+    transform: rotate(3deg);
+    animation: bannerWave 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes bannerWave {
+    from {
+        transform: rotate(3deg) translateY(0);
+    }
+
+    to {
+        transform: rotate(-3deg) translateY(-4px);
+    }
+}
+
+@keyframes fly {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(130vw);
+    }
+}
+
+/* --- ☁️ Environment --- */
+#environment {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* ☀️ Sun */
+#sun {
+    position: absolute;
+    top: 10vh;
+    right: 10vw;
+    width: 120px;
+    height: auto;
+    filter: drop-shadow(0 0 20px rgba(255, 255, 150, 0.6));
+    transition: opacity 2s ease-in-out, transform 2s ease-in-out;
+}
+
+body.celebrate #sun {
+    opacity: 0;
+    transform: translateY(100px) scale(0.8);
+    /* Sun sets */
+}
+
+/* ☁️ Cloud Template (ซ่อนไว้สำหรับ JS clone) */
+#cloudTemplate {
+    display: none;
+    /* ซ่อนองค์ประกอบต้นฉบับ */
+}
+
+/* 🌤 Floating Clouds (สร้างด้วย JS) */
+.floating-cloud {
+    position: absolute;
+    width: 250px;
+    /* กำหนดขนาดพื้นฐาน */
+    height: auto;
+    filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.1));
+    pointer-events: none;
+    z-index: 0;
+    /* Opacity และ transform scale ถูกกำหนดโดย JS */
+    /* animation ถูกกำหนดโดย JS (cloudDriftLeft หรือ cloudDriftRight) */
+    transition: opacity 2.5s ease-in-out;
+    /* เพื่อให้เมฆจางลงตอนกลางคืน */
+}
+
+body.celebrate .floating-cloud {
+    opacity: 0.3 !important;
+    /* จางลงตอนกลางคืน (ใช้ !important เพื่อ override JS opacity) */
+    filter: brightness(0.6);
+}
+
+/* @keyframes สำหรับเมฆเคลื่อนที่จากซ้ายไปขวา */
+@keyframes cloudDriftRight {
+    0% {
+        transform: translateX(0);
+        opacity: 0;
+    }
+
+    /* เริ่มจากซ้ายนอกจอ */
+    10% {
+        opacity: var(--cloud-initial-opacity, 0.85);
+    }
+
+    /* เฟดเข้ามา */
+    90% {
+        opacity: var(--cloud-initial-opacity, 0.85);
+    }
+
+    /* คงความทึบแสง */
+    100% {
+        transform: translateX(130vw);
+        opacity: 0;
+    }
+
+    /* เลื่อนไปขวานอกจอแล้วเฟดออก */
+}
+
+/* @keyframes สำหรับเมฆเคลื่อนที่จากขวาไปซ้าย */
+@keyframes cloudDriftLeft {
+    0% {
+        transform: translateX(0);
+        opacity: 0;
+    }
+
+    /* เริ่มจากขวานอกจอ */
+    10% {
+        opacity: var(--cloud-initial-opacity, 0.85);
+    }
+
+    /* เฟดเข้ามา */
+    90% {
+        opacity: var(--cloud-initial-opacity, 0.85);
+    }
+
+    /* คงความทึบแสง */
+    100% {
+        transform: translateX(-130vw);
+        opacity: 0;
+    }
+
+    /* เลื่อนไปซ้ายนอกจอแล้วเฟดออก */
+}
+
+
+/* 🌈 Rainbow */
+#rainbow {
+    position: absolute;
+    bottom: -15vh;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70vw;
+    height: auto;
+    opacity: 0;
+    /* Hidden by default */
+    transition: opacity 2.5s ease-in-out;
+    pointer-events: none;
+    z-index: 0;
+
+}
+
+body.celebrate #rainbow {
+    opacity: 0.4;
+    /* Appears on celebrate */
+}
+
+/* --- Responsive --- */
+@media (max-width: 480px) {
+    #giftBox {
+        width: 100px;
+        height: 100px;
+    }
+
+    .balloon {
+        width: 100px;
+        height: 120px;
+    }
+
+    #planeImage {
+        width: 80px;
+    }
+
+    #plane .banner {
+        padding: 8px 15px;
+    }
+
+    .mute-button {
+        top: 10px;
+        left: 10px;
+        width: 35px;
+        height: 35px;
+        font-size: 16px;
+    }
+
+    #rainbow {
+        width: 90vw;
+    }
+
+    .floating-cloud {
+        width: 150px;
+        /* ปรับขนาดพื้นฐานเมฆสำหรับ Mobile */
+    }
+}

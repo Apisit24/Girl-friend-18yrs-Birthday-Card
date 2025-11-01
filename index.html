@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Happy Birthday N'Pleng</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Kanit:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body id="body">
+    <div id="sky"></div>
+
+    <div id="environment">
+        <img id="sun" src="/pic/asset/sun.png" alt="Sun">
+        <img id="cloudTemplate" src="/pic/asset/cloud.webp" alt="Cloud Template">
+        <!-- <img id="rainbow" src="/pic/asset/rainbow.png" alt="Rainbow"> -->
+    </div>
+
+    <button id="muteButton" class="mute-button" aria-label="Mute audio">🔇</button>
+
+    <div id="mainMessage">
+        <h1 id="birthdayText">Happy Birthday Pleng💗</h1>
+        <p id="subText">สุขสันต์วันเกิดนะคนเก่ง อายุ 18 แล้ว ขอให้เป็นปีที่เต็มไปด้วยความสุข ความสำเร็จ และสิ่งดี ๆ
+            เข้ามาในชีวิต ขอให้สอบเข้ามหาลัยที่ตั้งใจไว้ได้อย่างที่หวังเลยนะ พี่เชื่อในความพยายามของหนูเสมอ 💖
+            รักมาก ๆ เลยนะไออ้วนน้อยของพี่ 🐷✨
+        </p>
+    </div>
+
+    <div id="giftBox">
+        <div class="box"></div>
+        <div class="lid"></div>
+        <div class="ribbon-vert"></div>
+        <div class="ribbon-hor"></div>
+        <div class="hint">เปิดกล่องของขวัญ! 🎁</div>
+    </div>
+
+    <div id="fireworksContainer" class="fireworks-container"></div>
+
+    <div id="plane">
+        <div class="banner">Happy Birthday!</div>
+        <img id="planeImage" src="/pic/asset/plane.png" alt="Airplane">
+    </div>
+
+    <audio id="popSound" src="/pic/asset/box.mp3" preload="auto"></audio>
+    <audio id="song" src="/pic//asset/song.mp3" loop preload="auto"></audio>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+
+    <script>
+        const IMAGE_URLS = Array.from({ length: 90 }, (_, i) => `/pic/pleng/${i + 1}.jpg`);
+
+        const FALLBACK_COLORS = ['#FFD700', '#FF69B4', '#B19CD9', '#87CEEB', '#F0E68C', '#FFB6C1'];
+        const FIREWORK_COLORS = ['#FF4500', '#FFD700', '#ADFF2F', '#1E90FF', '#FF69B4', '#FFFFFF', '#00FFFF', '#FF00FF', '#7B68EE', '#32CD32'];
+
+        const sky = document.getElementById('sky');
+        const gift = document.getElementById('giftBox');
+        const song = document.getElementById('song');
+        const pop = document.getElementById('popSound');
+        const body = document.getElementById('body');
+        const fireworksContainer = document.getElementById('fireworksContainer');
+        const plane = document.getElementById('plane');
+        const muteButton = document.getElementById('muteButton');
+        const cloudTemplate = document.getElementById('cloudTemplate');
+
+        function getRandomElement(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+        // --- Balloon Functions ---
+        function spawnBalloon() {
+            const b = document.createElement('div');
+            b.className = 'balloon';
+            const balloonInner = document.createElement('div');
+            balloonInner.className = 'balloon-inner';
+            const balloonBottom = document.createElement('div');
+            balloonBottom.className = 'balloon-bottom';
+
+            if (Math.random() < 0.7) {
+                const imageUrl = getRandomElement(IMAGE_URLS);
+                balloonInner.style.backgroundImage = `url(${imageUrl})`;
+                balloonBottom.style.backgroundColor = getRandomElement(FALLBACK_COLORS);
+            } else {
+                const bgColor = getRandomElement(FALLBACK_COLORS);
+                balloonInner.style.backgroundColor = bgColor;
+                balloonBottom.style.backgroundColor = bgColor;
+            }
+
+            b.append(balloonInner, balloonBottom);
+            b.style.left = Math.random() * (window.innerWidth - 120) + 'px';
+            b.style.animation = `floatUp ${10 + Math.random() * 10}s linear forwards`;
+            sky.appendChild(b);
+            setTimeout(() => b.remove(), 20000);
+        }
+
+        function spawnWave() { for (let i = 0; i < 10; i++) setTimeout(spawnBalloon, i * 200); }
+        function startBalloonLoop() { setInterval(spawnWave, 6000); }
+
+        // --- Firework Functions ---
+        function createFirework() {
+            const shell = document.createElement('div');
+            shell.className = 'firework-shell';
+            const targetX = Math.random() * 90 + 5;
+            const targetY = Math.random() * 50 + 10;
+            const color = getRandomElement(FIREWORK_COLORS);
+            shell.style.left = `${targetX}vw`;
+            shell.style.setProperty('--target-y', `${targetY}vh`);
+            shell.style.backgroundColor = color;
+            fireworksContainer.appendChild(shell);
+
+            shell.addEventListener('animationend', () => {
+                shell.remove();
+                const explosion = document.createElement('div');
+                explosion.className = 'firework-explosion';
+                explosion.style.left = `${targetX}vw`;
+                explosion.style.top = `${targetY}vh`;
+                const numParticles = 40 + Math.floor(Math.random() * 40);
+                for (let i = 0; i < numParticles; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'firework-particle';
+                    particle.style.backgroundColor = color;
+                    const angle = Math.random() * Math.PI * 2;
+                    const velocity = Math.random() * 80 + 30;
+                    particle.style.setProperty('--angle', `${angle}rad`);
+                    particle.style.setProperty('--velocity', `${velocity}px`);
+                    explosion.appendChild(particle);
+                }
+                fireworksContainer.appendChild(explosion);
+                setTimeout(() => explosion.remove(), 2000);
+            });
+        }
+
+        function startFireworks() {
+            function loop() {
+                if (body.classList.contains('celebrate')) createFirework();
+                setTimeout(loop, 300 + Math.random() * 500);
+            }
+            loop();
+        }
+
+        // --- Plane Functions ---
+        function flyPlane() {
+            plane.style.animation = 'none';
+            plane.offsetHeight; // Trigger reflow
+            plane.style.animation = 'fly 15s linear forwards';
+        }
+        plane.addEventListener('animationend', () => setTimeout(flyPlane, 10000));
+
+        // --- Gift Box Events ---
+        gift.addEventListener('mouseenter', () => {
+            anime({ targets: '#giftBox', transform: 'translate(-50%, -50%) scale(1.05) rotate(1deg)', duration: 300, easing: 'easeInOutSine' });
+        });
+        gift.addEventListener('mouseleave', () => {
+            anime({ targets: '#giftBox', transform: 'translate(-50%, -50%) scale(1) rotate(0deg)', duration: 300, easing: 'easeInOutSine' });
+        });
+
+        gift.addEventListener('click', () => {
+            // Box animations
+            anime({ targets: '#giftBox .lid', rotate: [-5, -60], translateY: -50, easing: 'easeOutBack', duration: 500 });
+            anime({ targets: '#giftBox .box', scale: [1, 1.1], duration: 300, direction: 'alternate', easing: 'easeInOutSine' });
+
+            // Box disappear and start celebration
+            anime({
+                targets: '#giftBox', transform: 'translate(-50%, -50%) scale(0)', opacity: 0, duration: 700, delay: 300, easing: 'easeInBack',
+                complete: () => {
+                    gift.style.display = 'none';
+                    body.classList.add('celebrate'); // <-- This triggers night mode!
+
+                    // Play sounds
+                    pop.currentTime = 0; pop.play();
+                    song.play().catch(() => { }); // Autoplay catch
+
+                    // Animate main text
+                    anime.timeline({ easing: 'easeOutExpo' })
+                        .add({ targets: '#birthdayText', opacity: [0, 1], scale: [0.7, 1], duration: 1200, delay: 500 })
+                        .add({ targets: '#subText', opacity: [0, 1], translateY: [20, 0], duration: 1000 }, '-=800');
+
+                    // Start loops
+                    startBalloonLoop();
+                    startFireworks();
+                    setTimeout(flyPlane, 100);
+                }
+            });
+        }, { once: true });
+
+        // --- Mute Button Event ---
+        muteButton.addEventListener('click', () => {
+            const isMuted = song.muted;
+            song.muted = !isMuted;
+            pop.muted = !isMuted;
+            muteButton.textContent = song.muted ? '🔈' : '🔇';
+        });
+
+        // --- ☁️ Cloud Spawning (ปรับปรุงใหม่) ---
+        function spawnCloud() {
+            const clone = cloudTemplate.cloneNode(true);
+            clone.removeAttribute("id"); // ลบ id="cloudTemplate" ออก
+            clone.classList.add("floating-cloud");
+
+            // สุ่มขนาด (0.8 ถึง 1.5 เท่าของขนาดเดิม)
+            const scale = 0.8 + Math.random() * 0.7;
+            clone.style.transform = `scale(${scale})`;
+
+            // สุ่มความทึบแสง (0.6 ถึง 0.95)
+            const opacity = 0.6 + Math.random() * 0.35;
+            clone.style.opacity = opacity;
+
+            // สุ่มตำแหน่งเริ่มต้น (ด้านบน 10% ถึง 70% ของหน้าจอ)
+            clone.style.top = `${Math.random() * 60 + 10}vh`; // 10vh to 70vh
+
+            // สุ่มตำแหน่งเริ่มต้น (ซ้ายหรือขวา) และทิศทางการเคลื่อนที่
+            const startRight = Math.random() < 0.5; // 50% เริ่มจากขวา, 50% เริ่มจากซ้าย
+            const duration = 60 + Math.random() * 60; // สุ่มระยะเวลาเคลื่อนที่
+
+            if (startRight) {
+                clone.style.left = "100vw"; // เริ่มจากด้านขวา
+                clone.style.animation = `cloudDriftLeft ${duration}s linear forwards`;
+            } else {
+                clone.style.left = "-20vw"; // เริ่มจากด้านซ้าย (ให้พ้นขอบจอไปเลย)
+                clone.style.animation = `cloudDriftRight ${duration}s linear forwards`;
+            }
+
+            document.getElementById("environment").appendChild(clone);
+            setTimeout(() => clone.remove(), duration * 1000);
+        }
+
+        // สร้างเมฆเริ่มต้น 5 ก้อน แล้วค่อยๆ สร้างเพิ่ม
+        for (let i = 0; i < 5; i++) {
+            setTimeout(spawnCloud, i * 3000); // เริ่มสร้างเมฆก้อนแรกทันที และตามมาเรื่อยๆ
+        }
+        setInterval(spawnCloud, 8000); // สร้างเมฆใหม่ทุก 8 วินาที
+    </script>
+</body>
+
+</html>
