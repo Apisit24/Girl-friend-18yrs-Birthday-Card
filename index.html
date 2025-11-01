@@ -17,9 +17,9 @@
     <div id="sky"></div>
 
     <div id="environment">
-        <img id="sun" src="/pic/asset/sun.png" alt="Sun">
-        <img id="cloudTemplate" src="/pic/asset/cloud.webp" alt="Cloud Template">
-        <!-- <img id="rainbow" src="/pic/asset/rainbow.png" alt="Rainbow"> -->
+        <img id="sun" src="pic/asset/sun.png" alt="Sun">
+        <img id="cloudTemplate" src="pic/asset/cloud.webp" alt="Cloud Template">
+        <!-- <img id="rainbow" src="pic/asset/rainbow.png" alt="Rainbow"> -->
     </div>
 
     <button id="muteButton" class="mute-button" aria-label="Mute audio">🔇</button>
@@ -44,16 +44,16 @@
 
     <div id="plane">
         <div class="banner">Happy Birthday!</div>
-        <img id="planeImage" src="/pic/asset/plane.png" alt="Airplane">
+        <img id="planeImage" src="pic/asset/plane.png" alt="Airplane">
     </div>
 
-    <audio id="popSound" src="/pic/asset/box.mp3" preload="auto"></audio>
-    <audio id="song" src="/pic//asset/song.mp3" loop preload="auto"></audio>
+    <audio id="popSound" src="pic/asset/box.mp3" preload="auto"></audio>
+    <audio id="song" src="pic/asset/song.mp3" loop preload="auto"></audio>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
 
     <script>
-        const IMAGE_URLS = Array.from({ length: 90 }, (_, i) => `/pic/pleng/${i + 1}.jpg`);
+        const IMAGE_URLS = Array.from({ length: 90 }, (_, i) => `pic/pleng/${i + 1}.jpg`);
 
         const FALLBACK_COLORS = ['#FFD700', '#FF69B4', '#B19CD9', '#87CEEB', '#F0E68C', '#FFB6C1'];
         const FIREWORK_COLORS = ['#FF4500', '#FFD700', '#ADFF2F', '#1E90FF', '#FF69B4', '#FFFFFF', '#00FFFF', '#FF00FF', '#7B68EE', '#32CD32'];
