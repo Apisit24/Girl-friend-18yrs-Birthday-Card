@@ -28,7 +28,7 @@
         <h1 id="birthdayText">Happy Birthday Pleng💗</h1>
         <p id="subText">สุขสันต์วันเกิดนะคนเก่ง อายุ 18 แล้ว ขอให้เป็นปีที่เต็มไปด้วยความสุข ความสำเร็จ และสิ่งดี ๆ
             เข้ามาในชีวิต ขอให้สอบเข้ามหาลัยที่ตั้งใจไว้ได้อย่างที่หวังเลยนะ พี่เชื่อในความพยายามของหนูเสมอ 💖
-            รักมาก ๆ เลยนะไออ้วนน้อยของพี่ 🐷✨
+            รักมาก ๆ เลยนะไอหมูตอนของพี่ 🐷✨
         </p>
     </div>
 
@@ -70,6 +70,22 @@
 
         function getRandomElement(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
+
+        let imageIndex = 0;
+        let colorIndex = 0;
+
+        function getNextImage() {
+            const url = IMAGE_URLS[imageIndex];
+            imageIndex = (imageIndex + 1) % IMAGE_URLS.length;
+            return url;
+        }
+
+        function getNextColor() {
+            const color = FALLBACK_COLORS[colorIndex];
+            colorIndex = (colorIndex + 1) % FALLBACK_COLORS.length;
+            return color;
+        }
+
         // --- Balloon Functions ---
         function spawnBalloon() {
             const b = document.createElement('div');
@@ -80,11 +96,11 @@
             balloonBottom.className = 'balloon-bottom';
 
             if (Math.random() < 0.7) {
-                const imageUrl = getRandomElement(IMAGE_URLS);
+                const imageUrl = getNextImage();      // 🔥 เปลี่ยนจากสุ่มเป็นลำดับ
                 balloonInner.style.backgroundImage = `url(${imageUrl})`;
-                balloonBottom.style.backgroundColor = getRandomElement(FALLBACK_COLORS);
+                balloonBottom.style.backgroundColor = getNextColor();
             } else {
-                const bgColor = getRandomElement(FALLBACK_COLORS);
+                const bgColor = getNextColor();       // 🔥 ลำดับเหมือนกัน
                 balloonInner.style.backgroundColor = bgColor;
                 balloonBottom.style.backgroundColor = bgColor;
             }
@@ -95,6 +111,7 @@
             sky.appendChild(b);
             setTimeout(() => b.remove(), 20000);
         }
+
 
         function spawnWave() { for (let i = 0; i < 10; i++) setTimeout(spawnBalloon, i * 200); }
         function startBalloonLoop() { setInterval(spawnWave, 6000); }
